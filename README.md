@@ -1,11 +1,11 @@
 # moonbit-mode
 
-> [!WARNING]  
+> [!WARNING]
 > Still in early stage development, use with caution
 
 ## Prerequisites
 
-- Emacs 29 with Tree-sitter support
+- Emacs 31 with Tree-sitter support
 - Build MoonBit grammars for Emacs:
     ``` shell
     git clone git@github.com:moonbitlang/tree-sitter-moonbit.git
@@ -20,10 +20,12 @@
 
 You can either:
 
-- Clone this repo, add the `moonbit-mode.el` file to your Emacs `load-path`: `(add-to-list 'load-path "/path/to/moonbit-mode")`
-- With `use-package`:
-    ``` elsip
-    (use-package moonbit-mode
-        :quelpa (moonbit-mode :fetcher github :repo "cxa/moonbit-mode"))
-    ```
-
+- Clone this repo, add the `moonbit-ts-mode.el` file to your Emacs
+  `load-path`: 
+  ``` elisp
+  (add-to-list 'load-path "/path/to/moonbit-ts-mode")
+  ```
+- With `package-vc`:
+  ``` 
+  M-x package-vc-install "https://github.com/include-yy/moonbit-ts-mode"
+  ```
