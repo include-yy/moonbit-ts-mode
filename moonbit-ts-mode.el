@@ -1,23 +1,32 @@
-;;; moonbit-mode.el --- Major mode for editing MoonBit -*- lexical-binding:t -*-
+;;; moonbit-ts-mode.el --- a moonbit major mode -*- lexical-binding:t; -*-
 
 ;; Copyright (C) 2024-present CHEN Xian'an (a.k.a `realazy').
+;; Copyright (C) 2025 include-yy <yy@egh0bww1.com>
 
-;; Maintainer: xianan.chen@gmail.com
+;; Author: realazy <xianan.chen@gmail.com>
+;; Maintainer: realazy <xianan.chen@gmail.com>
+;; Maintainer: include-yy <yy@egh0bww1.com>
 
-;; This file is not part of GNU Emacs.
+;; Package-Version: 0.1.0
+;; Package-Requires: ((emacs "31.0"))
+;; Keywords: languages
+;; URL: https://github.com/include-yy/moonbit-ts-mode
+;; ORIG-URL: https://github.com/cxa/moonbit-mode
 
-;; This program is free software: you can redistribute it and/or modify
-;; it under the terms of the GNU General Public License as published by
-;; the Free Software Foundation, either version 3 of the License, or
-;; (at your option) any later version.
+;; SPDX-License-Identifier: GPL-3.0-or-later
 
-;; This program is distributed in the hope that it will be useful,
+;; Moonbit-ts-mode is free software: you can redistribute it and/or
+;; modify it under the terms of the GNU General Public License as
+;; published by the Free Software Foundation, either version 3 of the
+;; License, or (at your option) any later version.
+
+;; Moonbit-ts-mode is distributed in the hope that it will be useful,
 ;; but WITHOUT ANY WARRANTY; without even the implied warranty of
-;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-;; GNU General Public License for more details.
+;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+;; General Public License for more details.
 
 ;; You should have received a copy of the GNU General Public License
-;; along with this program.  If not, see <https://www.gnu.org/licenses/>.
+;; along with moonbit-ts-mode.  If not, see <https://www.gnu.org/licenses/>.
 
 ;;; Commentary:
 
@@ -25,29 +34,29 @@
 
 ;;; Code:
 
-(defgroup moonbit nil
-  "Customization variables for MoonBit mode."
+(defgroup moonbit-ts-mode nil
+  "Support for MoonBit code."
   :tag "MoonBit"
   :group 'languages)
 
-(defface moonbit-alt-type-face
+(defface t-alt-type-face
   '((t . (:inherit font-lock-preprocessor-face)))
   "Face for 2nd consecutive type to distinguish the 1st one,
 e.g. `Int' in `type UserId Int'."
   :group 'moonbit)
 
 ;; TODO: for, import, extern, interface, derive?
-(defvar moonbit--keywords
+(defvar t--keywords
   '("if" "while" "break" "continue" "return" "match" "else" "as" "loop" "test"
     "fn" "type" "let" "mut" "enum" "struct"  "trait" "pub" "priv"
     "readonly")
   "MoonBit keywords.")
 
-(defvar moonbit--operators
+(defvar t--operators
   '((pipe_operator) "*" "/" "%" "+" "-" ">" ">=" "<=" "<" "==" "!=" "=" "+=" "-=" "*=" "/=")
   "MoonBit operators.")
 
-(defvar moonbit--font-lock-rules
+(defvar t--font-lock-rules
   `( :language moonbit
      :feature comment
      ([(comment) (docstring)] @font-lock-comment-face)
@@ -123,7 +132,7 @@ e.g. `Int' in `type UserId Int'."
         (apply_type
          (qualified_type_identifier) @moonbit-alt-type-face))))))
 
-(defvar moonbit--treesit-indent-rules
+(defvar t--treesit-indent-rules
   `((moonbit
      ((parent-is "structure") column-0 0)
      ((node-is "}") parent-bol 0)
@@ -133,13 +142,13 @@ e.g. `Int' in `type UserId Int'."
       parent-bol tab-width)
      ((parent-is "multiline_string_literal") parent-bol 0))))
 
-(defun moonbit--treesit-defun-name (node)
+(defun t--treesit-defun-name (node)
   "Return the defun name of NODE.
 Return nil if there is no name or if NODE is not a defun node."
   (treesit-node-text
    (treesit-node-child node 1)))
 
-(defun moonbit-mode--ts-setup ()
+(defun t--setup ()
   "Setup treesit."
   (treesit-parser-create 'moonbit)
   ;; Fontification
@@ -164,13 +173,17 @@ Return nil if there is no name or if NODE is not a defun node."
                 ("Newtype" "\\`type_definition\\'" nil nil)))
   (treesit-major-mode-setup))
 
-(define-derived-mode moonbit-mode prog-mode "MoonBit"
+(define-derived-mode moonbit-ts-mode prog-mode "MoonBit"
   "Major mode for editing MoonBit."
   (when (treesit-ready-p 'moonbit)
     (moonbit-mode--ts-setup)))
 
-(add-to-list 'auto-mode-alist '("\\.mbt\\'" . moonbit-mode))
+(add-to-list 'auto-mode-alist '("\\.mbt\\'" . moonbit-ts-mode))
 
-(provide 'moonbit-mode)
+(provide 'moonbit-ts-mode)
 
 ;;; moonbit-mode.el ends here
+
+;; Local Variables:
+;; read-symbol-shorthands: (("t-" . "moonbit-ts-mode-"))
+;; End:
